@@ -8,6 +8,7 @@ This keeps the spoken narration, transcript highlighting and final MP4 aligned.
 from __future__ import annotations
 
 import json
+import asyncio
 import math
 import shutil
 import subprocess
@@ -20,6 +21,8 @@ TMP_DIR = OUT_DIR / "narration_parts"
 TXT_OUT = OUT_DIR / "narration_script.txt"
 CONCAT_FILE = TMP_DIR / "audio_concat.txt"
 MP3_OUT = OUT_DIR / "narration.mp3"
+EDGE_VOICE = "en-GB-RyanNeural"
+EDGE_RATE = "+0%"
 
 
 def run(cmd: list[str]) -> None:
@@ -48,20 +51,35 @@ def atempo_chain(factor: float) -> str:
     return ",".join(f"atempo={p:.6f}" for p in parts)
 
 
+async def synthesize_edge_tts(text: str, out_mp3: Path) -> None:
+    import edge_tts  # type: ignore
+
+    communicate = edge_tts.Communicate(text, voice=EDGE_VOICE, rate=EDGE_RATE)
+    await communicate.save(str(out_mp3))
+
+
 def synthesize_espeak(text: str, out_wav: Path) -> None:
     espeak = shutil.which("espeak-ng") or shutil.which("espeak")
     if not espeak:
         raise RuntimeError("espeak-ng/espeak not found")
-    run([espeak, "-v", "en-us", "-s", "145", "-p", "45", "-a", "165", "-w", str(out_wav), text.replace("—", ", ")])
+    run([espeak, "-v", "en-gb", "-s", "145", "-p", "35", "-a", "165", "-w", str(out_wav), text.replace("—", ", ")])
 
 
 def synthesize_gtts(text: str, out_mp3: Path) -> None:
     from gtts import gTTS  # type: ignore
-    tts = gTTS(text, lang="en", tld="co.in", slow=False)
+    tts = gTTS(text, lang="en", tld="co.uk", slow=False)
     tts.save(str(out_mp3))
 
 
 def synthesize_segment(text: str, raw_path: Path) -> None:
+    try:
+        asyncio.run(synthesize_edge_tts(text, raw_path.with_suffix(".mp3")))
+        return
+    except ImportError:
+        print("edge-tts is not installed; falling back to local British English TTS.")
+    except Exception as exc:
+        print(f"{EDGE_VOICE} synthesis failed ({exc}); falling back to local British English TTS.")
+
     if shutil.which("espeak-ng") or shutil.which("espeak"):
         synthesize_espeak(text, raw_path.with_suffix(".wav"))
         return
@@ -69,7 +87,7 @@ def synthesize_segment(text: str, raw_path: Path) -> None:
         synthesize_gtts(text, raw_path.with_suffix(".mp3"))
         return
     except Exception as exc:
-        raise SystemExit("Unable to create narration. Install espeak-ng + ffmpeg, or install gTTS.") from exc
+        raise SystemExit("Unable to create narration. Install ffmpeg plus edge-tts, espeak-ng, or gTTS.") from exc
 
 
 def existing_raw(raw_base: Path) -> Path:

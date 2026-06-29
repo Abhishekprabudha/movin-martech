@@ -25,6 +25,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg espeak-ng
+          python -m pip install edge-tts
 
       - name: Validate uploaded video clips
         run: |

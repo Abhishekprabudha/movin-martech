@@ -88,7 +88,7 @@ def run(cmd, check=True, quiet=False):
     return subprocess.run(cmd, shell=isinstance(cmd, str), check=check, stdout=subprocess.DEVNULL if quiet else None, stderr=subprocess.STDOUT if quiet else None)
 
 run("apt-get -qq update && apt-get -qq install -y ffmpeg", quiet=False)
-run([sys.executable, "-m", "pip", "install", "-q", "gTTS"], quiet=False)
+run([sys.executable, "-m", "pip", "install", "-q", "edge-tts", "gTTS"], quiet=False)
 
 ROOT = Path("/content/movin_colab_output")
 RAW_DIR = ROOT / "raw_uploads"
@@ -270,7 +270,13 @@ print(f"Total story video duration: {cumulative:.1f}s")
 # 6) CREATE TIME-LOCKED NARRATION MP3 IN COLAB
 # =========================
 def make_narration_mp3():
-    from gtts import gTTS
+    import asyncio
+    import edge_tts
+
+    async def synthesize_edge(text, out):
+        communicate = edge_tts.Communicate(text, voice="en-GB-RyanNeural", rate="+0%")
+        await communicate.save(str(out))
+
     parts_dir = GEN_DIR / "narration_parts"
     parts_dir.mkdir(parents=True, exist_ok=True)
     fitted = []
@@ -278,7 +284,7 @@ def make_narration_mp3():
         target = float(seg["end"] - seg["start"])
         raw = parts_dir / f"{idx:02d}_{seg['id']}_raw.mp3"
         wav = parts_dir / f"{idx:02d}_{seg['id']}_fitted.wav"
-        gTTS(seg["text"], lang="en", tld="co.in", slow=False).save(str(raw))
+        asyncio.run(synthesize_edge(seg["text"], raw))
         actual = ffprobe_duration(raw)
         if actual > target:
             filter_audio = f"{fit_atempo_chain(actual / target)},atrim=0:{target:.3f},asetpts=N/SR/TB"
