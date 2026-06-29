@@ -73,6 +73,10 @@ function clipEndTime(index = currentClipIndex) {
   return start + Number(manifest?.clips?.[index]?.duration || 0);
 }
 
+function clipLocalDuration(index = currentClipIndex) {
+  return Number(manifest?.clips?.[index]?.duration || 0);
+}
+
 function globalTime() {
   if (useFinalVideo) return video.currentTime || 0;
   const videoTime = (clipOffsets[currentClipIndex] || 0) + (video.currentTime || 0);
@@ -253,6 +257,22 @@ async function playSection(index) {
   await loadClip(index, true, 0);
 }
 
+async function advanceAtManifestBoundary() {
+  if (isIntroActive || useFinalVideo || video.paused) return;
+
+  const localEnd = clipLocalDuration();
+  if (!localEnd || (video.currentTime || 0) < localEnd - 0.05) return;
+
+  if (currentClipIndex < (manifest.clips || []).length - 1) {
+    await loadClip(currentClipIndex + 1, true, 0);
+  } else {
+    video.pause();
+    narrationAudio.pause();
+    narrationAudio.currentTime = Math.min(totalDuration(), clipEndTime());
+    updateControlLabels();
+  }
+}
+
 async function seekGlobal(target) {
   pauseAll();
   isIntroActive = false;
@@ -282,6 +302,7 @@ function wireMedia() {
   video.addEventListener('timeupdate', () => {
     syncNarrationToVideo();
     updateUI();
+    advanceAtManifestBoundary();
   });
   video.addEventListener('loadedmetadata', updateUI);
   video.addEventListener('play', () => {
