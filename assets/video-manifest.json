@@ -14,9 +14,9 @@
       "sourceStartSeconds": 0,
       "parentLabel": "01_aeo_geo_intelligence",
       "part": 1,
-      "duration": 113.667,
-      "globalStart": 0.0,
-      "globalEnd": 113.667,
+      "duration": 140.0,
+      "globalStart": 0,
+      "globalEnd": 140.0,
       "narrationSegmentIds": [
         "opening",
         "aeo_geo",
@@ -34,8 +34,8 @@
       "parentLabel": "02_lead_generation",
       "part": 1,
       "duration": 40.0,
-      "globalStart": 113.667,
-      "globalEnd": 153.667,
+      "globalStart": 140.0,
+      "globalEnd": 180.0,
       "narrationSegmentIds": [
         "lead_generation"
       ],
@@ -49,9 +49,9 @@
       "sourceStartSeconds": 0,
       "parentLabel": "03_autonomous_campaigns_syndication",
       "part": 1,
-      "duration": 71.778,
-      "globalStart": 153.667,
-      "globalEnd": 225.445,
+      "duration": 75.0,
+      "globalStart": 180.0,
+      "globalEnd": 255.0,
       "narrationSegmentIds": [
         "campaign_generation",
         "syndication"
@@ -67,8 +67,8 @@
       "parentLabel": "04_data_monetization",
       "part": 1,
       "duration": 45.0,
-      "globalStart": 225.445,
-      "globalEnd": 270.445,
+      "globalStart": 255.0,
+      "globalEnd": 300.0,
       "narrationSegmentIds": [
         "data_monetization",
         "close"
