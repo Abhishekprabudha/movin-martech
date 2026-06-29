@@ -21,6 +21,7 @@ TMP_DIR = OUT_DIR / "narration_parts"
 TXT_OUT = OUT_DIR / "narration_script.txt"
 CONCAT_FILE = TMP_DIR / "audio_concat.txt"
 MP3_OUT = OUT_DIR / "narration.mp3"
+INTRO_MP3_OUT = OUT_DIR / "intro.mp3"
 EDGE_VOICE = "en-GB-RyanNeural"
 EDGE_RATE = "+0%"
 
@@ -119,7 +120,18 @@ def main() -> None:
     data = json.loads(NARRATION_JSON.read_text(encoding="utf-8"))
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     TMP_DIR.mkdir(parents=True, exist_ok=True)
-    TXT_OUT.write_text("\n\n".join(seg["text"] for seg in data["segments"]), encoding="utf-8")
+    TXT_OUT.write_text("\n\n".join([data.get("intro", {}).get("text", "")] + [seg["text"] for seg in data["segments"]]), encoding="utf-8")
+
+    intro = data.get("intro")
+    if intro and intro.get("text"):
+        intro_raw_base = TMP_DIR / "00_intro_raw"
+        intro_fitted = TMP_DIR / "00_intro_fitted.wav"
+        synthesize_segment(intro["text"], intro_raw_base)
+        intro_raw = existing_raw(intro_raw_base)
+        intro_duration = math.ceil(ffprobe_duration(intro_raw) * 1000) / 1000
+        fit_to_duration(intro_raw, intro_fitted, intro_duration)
+        run(["ffmpeg", "-y", "-i", str(intro_fitted), "-codec:a", "libmp3lame", "-q:a", "3", str(INTRO_MP3_OUT)])
+        print(f"Created {INTRO_MP3_OUT.relative_to(ROOT)} ({ffprobe_duration(INTRO_MP3_OUT):.2f}s)")
 
     fitted_paths: list[Path] = []
     for idx, seg in enumerate(data["segments"], start=1):

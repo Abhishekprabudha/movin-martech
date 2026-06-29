@@ -32,8 +32,8 @@
         <h1>Choose the Movin growth capability you want to explore.</h1>
         <p id="introCommentary" class="hero-text">Welcome to the Movin Marketing Technology OS. Choose an option to learn more, and the selected section will play with its matching video and narration.</p>
         <div class="hero-actions">
-          <button id="playBtn" class="btn primary">Play full story</button>
-          <button id="restartBtn" class="btn secondary">Back to intro</button>
+          <button id="pauseBtn" class="btn primary">Pause</button>
+          <button id="muteBtn" class="btn secondary">Mute</button>
         </div>
       </div>
       <div class="hero-panel option-panel">
@@ -56,12 +56,14 @@
           <h2>Select an option to learn more</h2>
           <p>Video stays paused on this landing view. When you choose a section, the matching walkthrough video and narration start together.</p>
         </div>
-        <video id="demoVideo" class="is-hidden" controls playsinline preload="metadata"></video>
+        <video id="demoVideo" class="is-hidden" playsinline preload="metadata"></video>
+        <audio id="introAudio" preload="auto"></audio>
+        <audio id="narrationAudio" preload="auto"></audio>
         <div class="progress-wrap">
           <div id="storyProgress" class="story-progress"></div>
         </div>
         <div id="assetNotice" class="asset-notice">
-          Run the Colab processor, upload the generated <code>assets/clips</code> files and <code>assets/video-manifest.json</code>, then GitHub Actions will build the final MP4 and MP3.
+Generated MP3 narration is required. Run <code>scripts/build_narration.py</code> to create <code>assets/generated/intro.mp3</code> and <code>assets/generated/narration.mp3</code>.
         </div>
       </div>
 
@@ -77,13 +79,6 @@
       </aside>
     </section>
 
-    <section class="timeline-shell">
-      <div class="section-heading">
-        <p class="eyebrow compact">Product storyline</p>
-        <h2>End-to-end Movin marketing-tech flow</h2>
-      </div>
-      <div id="timeline" class="timeline"></div>
-    </section>
 
     <section class="flow-board">
       <div class="flow-card">
