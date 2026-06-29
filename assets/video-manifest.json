@@ -1,0 +1,79 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-06-29T00:43:56Z",
+  "clipTargetMB": 18.5,
+  "videoWidth": 1280,
+  "videoFPS": 18,
+  "videoCRF": 31,
+  "clips": [
+    {
+      "sequence": 1,
+      "src": "assets/clips/01_aeo_geo_intelligence_part_001.mp4",
+      "chapter": "AEO + GEO Intelligence / Opportunity Engine",
+      "sourceOriginal": "Screen Recording 2026-06-04 at 12.11.10\u202fPM 2.mov",
+      "sourceStartSeconds": 0,
+      "parentLabel": "01_aeo_geo_intelligence",
+      "part": 1,
+      "duration": 113.667,
+      "globalStart": 0.0,
+      "globalEnd": 113.667,
+      "narrationSegmentIds": [
+        "opening",
+        "aeo_geo",
+        "prompt_intelligence",
+        "opportunity_engine"
+      ],
+      "sizeMB": 1.33
+    },
+    {
+      "sequence": 2,
+      "src": "assets/clips/02_lead_generation_part_001.mp4",
+      "chapter": "WarmLead AI / Lead Generation",
+      "sourceOriginal": "Screen Recording 2026-06-02 at 6.26.34\u202fPM.mov",
+      "sourceStartSeconds": 0,
+      "parentLabel": "02_lead_generation",
+      "part": 1,
+      "duration": 40.0,
+      "globalStart": 113.667,
+      "globalEnd": 153.667,
+      "narrationSegmentIds": [
+        "lead_generation"
+      ],
+      "sizeMB": 0.35
+    },
+    {
+      "sequence": 3,
+      "src": "assets/clips/03_autonomous_campaigns_syndication_part_001.mp4",
+      "chapter": "Autonomous Campaign Generation + Syndication",
+      "sourceOriginal": "Demo_ElevateOS 1.mp4",
+      "sourceStartSeconds": 0,
+      "parentLabel": "03_autonomous_campaigns_syndication",
+      "part": 1,
+      "duration": 71.778,
+      "globalStart": 153.667,
+      "globalEnd": 225.445,
+      "narrationSegmentIds": [
+        "campaign_generation",
+        "syndication"
+      ],
+      "sizeMB": 1.12
+    },
+    {
+      "sequence": 4,
+      "src": "assets/clips/04_data_monetization_part_001.mp4",
+      "chapter": "B2B Shipment Data Monetization",
+      "sourceOriginal": "de3mo-20260609_174126-Meeting Recording.mp4",
+      "sourceStartSeconds": 0,
+      "parentLabel": "04_data_monetization",
+      "part": 1,
+      "duration": 45.0,
+      "globalStart": 225.445,
+      "globalEnd": 270.445,
+      "narrationSegmentIds": [
+        "data_monetization",
+        "close"
+      ],
+      "sizeMB": 0.37
+    }
+  ]
+}
