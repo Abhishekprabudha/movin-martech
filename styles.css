@@ -259,3 +259,83 @@ footer {
   h1 { font-size: 42px; }
   .hero { padding-top: 36px; }
 }
+
+.option-panel {
+  align-self: stretch;
+}
+.section-options {
+  display: grid;
+  gap: 12px;
+}
+.section-option {
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  color: var(--text);
+  background: rgba(255,255,255,0.07);
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+.section-option:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255,122,26,0.22), rgba(79,180,255,0.12));
+  border-color: rgba(255,177,95,0.5);
+}
+.section-option span {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  color: #10131d;
+  background: linear-gradient(135deg, var(--orange), var(--amber));
+  font-weight: 900;
+}
+.section-option strong,
+.section-option small {
+  display: block;
+}
+.section-option strong {
+  font-size: 18px;
+  letter-spacing: -0.04em;
+}
+.section-option small {
+  margin-top: 6px;
+  color: var(--muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.intro-stage {
+  min-height: 360px;
+  aspect-ratio: 16/9;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: clamp(24px, 5vw, 54px);
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.13);
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,122,26,0.32), transparent 35%),
+    radial-gradient(circle at 82% 20%, rgba(79,180,255,0.22), transparent 38%),
+    linear-gradient(135deg, #111827, #020617);
+}
+.intro-stage h2 {
+  margin: 0;
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: .95;
+  letter-spacing: -0.07em;
+}
+.intro-stage p:not(.eyebrow) {
+  max-width: 660px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+.is-hidden {
+  display: none;
+}
