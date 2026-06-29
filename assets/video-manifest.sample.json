@@ -7,33 +7,46 @@
     {
       "src": "assets/clips/01_aeo_geo_intelligence_part_001.mp4",
       "chapter": "AEO + GEO Intelligence",
-      "narrationSegmentIds": ["opening", "aeo_geo", "prompt_intelligence", "opportunity_engine"],
+      "narrationSegmentIds": [
+        "opening",
+        "aeo_geo",
+        "prompt_intelligence",
+        "opportunity_engine"
+      ],
       "sourceOriginal": "Screen Recording 2026-06-04 at 12.11.10 PM 2.mov",
-      "duration": 140,
+      "duration": 128.0,
       "sequence": 1
     },
     {
       "src": "assets/clips/02_lead_generation_part_001.mp4",
       "chapter": "Lead Generation",
-      "narrationSegmentIds": ["lead_generation"],
+      "narrationSegmentIds": [
+        "lead_generation"
+      ],
       "sourceOriginal": "Screen Recording 2026-06-02 at 6.26.34 PM.mov",
-      "duration": 40,
+      "duration": 40.0,
       "sequence": 2
     },
     {
       "src": "assets/clips/03_autonomous_campaigns_part_001.mp4",
       "chapter": "Autonomous Campaigns + Syndication",
-      "narrationSegmentIds": ["campaign_generation", "syndication"],
+      "narrationSegmentIds": [
+        "campaign_generation",
+        "syndication"
+      ],
       "sourceOriginal": "Demo_ElevateOS 1.mp4",
-      "duration": 75,
+      "duration": 75.0,
       "sequence": 3
     },
     {
       "src": "assets/clips/04_data_monetization_part_001.mp4",
       "chapter": "Data Monetization",
-      "narrationSegmentIds": ["data_monetization", "close"],
+      "narrationSegmentIds": [
+        "data_monetization",
+        "close"
+      ],
       "sourceOriginal": "de3mo-20260609_174126-Meeting Recording.mp4",
-      "duration": 45,
+      "duration": 57.0,
       "sequence": 4
     }
   ]

@@ -32,7 +32,7 @@ SEQUENCE_PLAN = [
         "match_any": ["06-04", "12.11.10", "12.11", "screen recording 2026-06-04"],
         "fallback_order": 1,
         "start_seconds": 0,
-        "target_duration": 140,
+        "target_duration": 128,
         "narrationSegmentIds": ["opening", "aeo_geo", "prompt_intelligence", "opportunity_engine"],
     },
     {
@@ -59,7 +59,7 @@ SEQUENCE_PLAN = [
         "match_any": ["de3mo", "meeting recording", "20260609", "data"],
         "fallback_order": 4,
         "start_seconds": 0,
-        "target_duration": 45,
+        "target_duration": 57,
         "narrationSegmentIds": ["data_monetization", "close"],
     },
 ]
