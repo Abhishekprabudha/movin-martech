@@ -28,31 +28,17 @@
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Boardroom demo / 5-minute synchronized story</p>
-        <h1>From AI discovery to monetized logistics growth.</h1>
-        <p class="hero-text">A cinematic product flow that synchronizes Movin’s uploaded demo videos with a narrated transcript across AEO, GEO, lead generation, autonomous campaigns, syndication and data monetization.</p>
+        <p class="eyebrow">Interactive boardroom demo</p>
+        <h1>Choose the Movin growth capability you want to explore.</h1>
+        <p id="introCommentary" class="hero-text">Welcome to the Movin Marketing Technology OS. Choose an option to learn more, and the selected section will play with its matching video and narration.</p>
         <div class="hero-actions">
-          <button id="playBtn" class="btn primary">Play synced story</button>
-          <button id="restartBtn" class="btn secondary">Restart</button>
+          <button id="playBtn" class="btn primary">Play full story</button>
+          <button id="restartBtn" class="btn secondary">Back to intro</button>
         </div>
       </div>
-      <div class="hero-panel">
-        <div class="metric-card active">
-          <span>AEO / GEO</span>
-          <strong>AI answer ownership</strong>
-        </div>
-        <div class="metric-card">
-          <span>WarmLead AI</span>
-          <strong>Intent-based pipeline</strong>
-        </div>
-        <div class="metric-card">
-          <span>Campaign Agents</span>
-          <strong>Autonomous launch</strong>
-        </div>
-        <div class="metric-card">
-          <span>Data Monetization</span>
-          <strong>Shipment signal graph</strong>
-        </div>
+      <div class="hero-panel option-panel">
+        <p class="eyebrow compact">Choose a section</p>
+        <div id="sectionOptions" class="section-options" aria-label="Movin demo sections"></div>
       </div>
     </section>
 
@@ -65,7 +51,12 @@
           </div>
           <div id="timeLabel">00:00 / 05:00</div>
         </div>
-        <video id="demoVideo" controls playsinline preload="metadata"></video>
+        <div id="introStage" class="intro-stage">
+          <p class="eyebrow compact">Intro commentary</p>
+          <h2>Select an option to learn more</h2>
+          <p>Video stays paused on this landing view. When you choose a section, the matching walkthrough video and narration start together.</p>
+        </div>
+        <video id="demoVideo" class="is-hidden" controls playsinline preload="metadata"></video>
         <div class="progress-wrap">
           <div id="storyProgress" class="story-progress"></div>
         </div>

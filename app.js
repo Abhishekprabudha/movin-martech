@@ -7,6 +7,9 @@ const chapterLabel = document.getElementById('chapterLabel');
 const timeLabel = document.getElementById('timeLabel');
 const progressEl = document.getElementById('storyProgress');
 const assetNotice = document.getElementById('assetNotice');
+const introStage = document.getElementById('introStage');
+const introCommentary = document.getElementById('introCommentary');
+const sectionOptions = document.getElementById('sectionOptions');
 
 const FINAL_VIDEO = 'assets/generated/movin_martech_weaved.mp4';
 const MANIFEST_PATH = 'assets/video-manifest.json';
@@ -19,6 +22,11 @@ let useFinalVideo = false;
 let currentClipIndex = 0;
 let clipOffsets = [];
 let activeSegmentId = null;
+let pendingNarrationTimeout = null;
+let selectedClipIndex = null;
+let playAllMode = false;
+
+const INTRO_NARRATION = 'Welcome to the Movin Marketing Technology OS. This landing page is an interactive menu. Choose an option to learn more about AI discovery, lead generation, autonomous campaigns, syndication, or shipment data monetization. When you select a section, the matching video and narration will play together.';
 
 function fmt(sec) {
   sec = Math.max(0, Math.floor(sec || 0));
@@ -80,6 +88,22 @@ function renderTranscript() {
   });
 }
 
+function renderSectionOptions() {
+  sectionOptions.innerHTML = '';
+  (manifest.clips || []).forEach((clip, idx) => {
+    const option = document.createElement('button');
+    option.className = 'section-option';
+    option.type = 'button';
+    option.innerHTML = `
+      <span>${String(idx + 1).padStart(2, '0')}</span>
+      <strong>${clip.chapter}</strong>
+      <small>Play video + narration</small>
+    `;
+    option.addEventListener('click', () => playSection(idx));
+    sectionOptions.appendChild(option);
+  });
+}
+
 function renderTimeline() {
   timelineEl.innerHTML = '';
   narration.segments.forEach((seg, idx) => {
@@ -91,6 +115,53 @@ function renderTimeline() {
     step.addEventListener('click', () => seekGlobal(seg.start));
     timelineEl.appendChild(step);
   });
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.98;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function clearPendingNarration() {
+  if (pendingNarrationTimeout) window.clearTimeout(pendingNarrationTimeout);
+  pendingNarrationTimeout = null;
+}
+
+function startClipNarration(index, atSeconds = 0) {
+  clearPendingNarration();
+  const clipStart = clipOffsets[index] || 0;
+  const text = narration.segments
+    .filter((segment) => {
+      const clipEnd = clipStart + Number(manifest.clips[index]?.duration || 0);
+      return segment.end > clipStart && segment.start < clipEnd;
+    })
+    .map((segment) => segment.text)
+    .join(' ');
+
+  if (!text) return;
+  pendingNarrationTimeout = window.setTimeout(() => speak(text), Math.max(0, atSeconds) * 1000);
+}
+
+function showIntro() {
+  selectedClipIndex = null;
+  playAllMode = false;
+  clearPendingNarration();
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  video.pause();
+  video.removeAttribute('src');
+  video.load();
+  video.classList.add('is-hidden');
+  introStage.classList.remove('is-hidden');
+  chapterLabel.textContent = 'Choose an option to learn more';
+  timeLabel.textContent = 'Intro';
+  progressEl.style.width = '0%';
+  introCommentary.textContent = INTRO_NARRATION;
+  speak(INTRO_NARRATION);
 }
 
 function setActiveSegment(seg) {
@@ -112,14 +183,36 @@ function updateUI() {
   progressEl.style.width = `${Math.min(100, (t / total) * 100)}%`;
 }
 
-function loadClip(index, autoplay = false, atSeconds = 0) {
+function loadClip(index, autoplay = false, atSeconds = 0, narrate = false) {
   const clip = manifest.clips[index];
   if (!clip) return;
   currentClipIndex = index;
+  introStage.classList.add('is-hidden');
+  video.classList.remove('is-hidden');
   video.src = clip.src;
   video.currentTime = atSeconds;
   chapterLabel.textContent = clip.chapter || 'Movin synchronized demo';
+  if (narrate) startClipNarration(index, atSeconds);
   if (autoplay) video.play().catch(() => {});
+}
+
+function playSection(index) {
+  selectedClipIndex = index;
+  playAllMode = false;
+
+  if (useFinalVideo) {
+    introStage.classList.add('is-hidden');
+    video.classList.remove('is-hidden');
+    video.src = FINAL_VIDEO;
+    video.currentTime = clipOffsets[index] || 0;
+    startClipNarration(index, 0);
+    video.play().catch(() => {});
+    updateUI();
+    return;
+  }
+
+  loadClip(index, true, 0, true);
+  updateUI();
 }
 
 function seekGlobal(target) {
@@ -147,16 +240,30 @@ function wireVideo() {
   video.addEventListener('timeupdate', updateUI);
   video.addEventListener('loadedmetadata', updateUI);
   video.addEventListener('ended', () => {
-    if (!useFinalVideo && currentClipIndex < (manifest.clips.length - 1)) {
-      loadClip(currentClipIndex + 1, true, 0);
+    clearPendingNarration();
+    if (!useFinalVideo && playAllMode && currentClipIndex < (manifest.clips.length - 1)) {
+      loadClip(currentClipIndex + 1, true, 0, true);
     }
   });
 
   playBtn.addEventListener('click', () => {
-    if (!video.src) loadClip(0, false, 0);
-    video.play().catch(() => {});
+    selectedClipIndex = null;
+    playAllMode = true;
+
+    if (useFinalVideo) {
+      introStage.classList.add('is-hidden');
+      video.classList.remove('is-hidden');
+      video.src = FINAL_VIDEO;
+      video.currentTime = 0;
+      startClipNarration(0, 0);
+      video.play().catch(() => {});
+      updateUI();
+      return;
+    }
+
+    loadClip(0, true, 0, true);
   });
-  restartBtn.addEventListener('click', () => seekGlobal(0));
+  restartBtn.addEventListener('click', showIntro);
 }
 
 async function init() {
@@ -169,6 +276,7 @@ async function init() {
   renderTranscript();
   renderTimeline();
   calculateOffsets();
+  renderSectionOptions();
 
   useFinalVideo = await exists(FINAL_VIDEO);
   if (useFinalVideo) {
@@ -179,7 +287,7 @@ async function init() {
     const firstClipExists = manifest.clips?.[0]?.src ? await exists(manifest.clips[0].src) : false;
     if (firstClipExists) {
       assetNotice.classList.add('ready');
-      loadClip(0, false, 0);
+      chapterLabel.textContent = 'Choose an option to learn more';
     } else {
       video.removeAttribute('src');
       chapterLabel.textContent = 'Awaiting Colab-generated clips';
@@ -187,7 +295,7 @@ async function init() {
   }
 
   wireVideo();
-  updateUI();
+  showIntro();
 }
 
 init().catch((err) => {
