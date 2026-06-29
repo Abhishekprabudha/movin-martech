@@ -10,13 +10,13 @@
       "sequence": 1,
       "src": "assets/clips/01_aeo_geo_intelligence_part_001.mp4",
       "chapter": "AEO + GEO Intelligence / Opportunity Engine",
-      "sourceOriginal": "Screen Recording 2026-06-04 at 12.11.10\u202fPM 2.mov",
+      "sourceOriginal": "Screen Recording 2026-06-04 at 12.11.10 PM 2.mov",
       "sourceStartSeconds": 0,
       "parentLabel": "01_aeo_geo_intelligence",
       "part": 1,
-      "duration": 128.0,
-      "globalStart": 0,
-      "globalEnd": 128.0,
+      "duration": 108.0,
+      "globalStart": 0.0,
+      "globalEnd": 108.0,
       "narrationSegmentIds": [
         "opening",
         "aeo_geo",
@@ -29,13 +29,13 @@
       "sequence": 2,
       "src": "assets/clips/02_lead_generation_part_001.mp4",
       "chapter": "WarmLead AI / Lead Generation",
-      "sourceOriginal": "Screen Recording 2026-06-02 at 6.26.34\u202fPM.mov",
+      "sourceOriginal": "Screen Recording 2026-06-02 at 6.26.34 PM.mov",
       "sourceStartSeconds": 0,
       "parentLabel": "02_lead_generation",
       "part": 1,
       "duration": 40.0,
-      "globalStart": 128.0,
-      "globalEnd": 168.0,
+      "globalStart": 108.0,
+      "globalEnd": 148.0,
       "narrationSegmentIds": [
         "lead_generation"
       ],
@@ -50,8 +50,8 @@
       "parentLabel": "03_autonomous_campaigns_syndication",
       "part": 1,
       "duration": 75.0,
-      "globalStart": 168.0,
-      "globalEnd": 243.0,
+      "globalStart": 148.0,
+      "globalEnd": 223.0,
       "narrationSegmentIds": [
         "campaign_generation",
         "syndication"
@@ -67,8 +67,8 @@
       "parentLabel": "04_data_monetization",
       "part": 1,
       "duration": 57.0,
-      "globalStart": 243.0,
-      "globalEnd": 300.0,
+      "globalStart": 223.0,
+      "globalEnd": 280.0,
       "narrationSegmentIds": [
         "data_monetization",
         "close"
