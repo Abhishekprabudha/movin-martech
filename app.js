@@ -27,6 +27,7 @@ let clipOffsets = [];
 let activeSegmentId = null;
 let selectedClipIndex = null;
 let isIntroActive = true;
+let playbackToken = 0;
 
 function fmt(sec) {
   sec = Math.max(0, Math.floor(sec || 0));
@@ -106,7 +107,7 @@ function renderSectionOptions() {
     option.innerHTML = `
       <span>${String(idx + 1).padStart(2, '0')}</span>
       <strong>${clip.chapter}</strong>
-      <small>Play video + generated MP3 narration</small>
+      <small>Open this walkthrough</small>
     `;
     option.addEventListener('click', () => playSection(idx));
     sectionOptions.appendChild(option);
@@ -186,42 +187,74 @@ function updateUI() {
   updateControlLabels();
 }
 
-function loadClip(index, autoplay = false, atSeconds = 0) {
+async function loadClip(index, autoplay = false, atSeconds = 0) {
   const clip = manifest.clips[index];
   if (!clip) return;
+
+  const token = ++playbackToken;
+  pauseAll();
   isIntroActive = false;
   currentClipIndex = index;
   introAudio.pause();
   introStage.classList.add('is-hidden');
   video.classList.remove('is-hidden');
-  video.src = clip.src;
-  video.currentTime = atSeconds;
-  narrationAudio.currentTime = (clipOffsets[index] || 0) + atSeconds;
+
+  const target = Math.max(0, atSeconds);
+  const globalTarget = (clipOffsets[index] || 0) + target;
+  narrationAudio.currentTime = globalTarget;
+
+  if (video.getAttribute('src') !== clip.src) {
+    video.src = clip.src;
+    video.load();
+  }
+
+  if (Number.isFinite(video.duration) && video.readyState >= 1) {
+    video.currentTime = Math.min(target, Math.max(0, video.duration - 0.05));
+  } else {
+    await new Promise((resolve) => {
+      const done = () => {
+        video.removeEventListener('loadedmetadata', done);
+        resolve();
+      };
+      video.addEventListener('loadedmetadata', done, { once: true });
+    });
+    if (token !== playbackToken) return;
+    video.currentTime = Math.min(target, Math.max(0, (video.duration || target) - 0.05));
+  }
+
+  narrationAudio.currentTime = globalTarget;
   chapterLabel.textContent = clip.chapter || 'Movin synchronized demo';
-  if (autoplay) playMedia();
+  updateUI();
+  if (autoplay && token === playbackToken) await playMedia();
 }
 
-function playSection(index) {
+async function playSection(index) {
   selectedClipIndex = index;
+  isIntroActive = false;
+  pauseAll();
   isIntroActive = false;
   introAudio.pause();
 
   if (useFinalVideo) {
     introStage.classList.add('is-hidden');
     video.classList.remove('is-hidden');
-    video.src = FINAL_VIDEO;
-    video.currentTime = clipOffsets[index] || 0;
-    narrationAudio.currentTime = clipOffsets[index] || 0;
-    playMedia();
+    if (video.getAttribute('src') !== FINAL_VIDEO) {
+      video.src = FINAL_VIDEO;
+      video.load();
+    }
+    const target = clipOffsets[index] || 0;
+    video.currentTime = target;
+    narrationAudio.currentTime = target;
+    await playMedia();
     updateUI();
     return;
   }
 
-  loadClip(index, true, 0);
-  updateUI();
+  await loadClip(index, true, 0);
 }
 
-function seekGlobal(target) {
+async function seekGlobal(target) {
+  pauseAll();
   isIntroActive = false;
   introAudio.pause();
   narrationAudio.currentTime = target;
@@ -242,7 +275,7 @@ function seekGlobal(target) {
     }
   }
   const localTarget = Math.max(0, target - (clipOffsets[index] || 0));
-  loadClip(index, true, localTarget);
+  await loadClip(index, true, localTarget);
 }
 
 function wireMedia() {
@@ -261,11 +294,10 @@ function wireMedia() {
     updateControlLabels();
   });
   video.addEventListener('ended', () => {
-    if (!useFinalVideo && (narrationAudio.currentTime || 0) < clipEndTime() - 0.25) {
-      updateControlLabels();
-      return;
-    }
     narrationAudio.pause();
+    if (!useFinalVideo) {
+      narrationAudio.currentTime = clipEndTime();
+    }
     updateControlLabels();
   });
   introAudio.addEventListener('play', updateControlLabels);

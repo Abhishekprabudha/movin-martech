@@ -79,7 +79,7 @@
     "id": "intro",
     "voice": "en-GB-RyanNeural",
     "output": "assets/generated/intro.mp3",
-    "text": "Welcome to the Movin Marketing Technology OS. This landing page is an interactive menu. Choose an option to learn more about AI discovery, lead generation, autonomous campaigns, syndication, or shipment data monetization. When you select a section, the matching video and generated MP3 narration will play together."
+    "text": "Welcome to the Movin Marketing Technology OS. This landing page is an interactive menu. Choose an option to learn more about AI discovery, lead generation, autonomous campaigns, syndication, or shipment data monetization."
   },
   "voice": "en-GB-RyanNeural",
   "output": "assets/generated/narration.mp3"
