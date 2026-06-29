@@ -52,10 +52,10 @@ def atempo_chain(factor: float) -> str:
     return ",".join(f"atempo={p:.6f}" for p in parts)
 
 
-async def synthesize_edge_tts(text: str, out_mp3: Path) -> None:
+async def synthesize_edge_tts(text: str, out_mp3: Path, rate: str = EDGE_RATE) -> None:
     import edge_tts  # type: ignore
 
-    communicate = edge_tts.Communicate(text, voice=EDGE_VOICE, rate=EDGE_RATE)
+    communicate = edge_tts.Communicate(text, voice=EDGE_VOICE, rate=rate)
     await communicate.save(str(out_mp3))
 
 
@@ -72,9 +72,9 @@ def synthesize_gtts(text: str, out_mp3: Path) -> None:
     tts.save(str(out_mp3))
 
 
-def synthesize_segment(text: str, raw_path: Path) -> None:
+def synthesize_segment(text: str, raw_path: Path, rate: str = EDGE_RATE) -> None:
     try:
-        asyncio.run(synthesize_edge_tts(text, raw_path.with_suffix(".mp3")))
+        asyncio.run(synthesize_edge_tts(text, raw_path.with_suffix(".mp3"), rate=rate))
         return
     except ImportError:
         print("edge-tts is not installed; falling back to local British English TTS.")
@@ -139,7 +139,7 @@ def main() -> None:
         safe_id = seg["id"].replace("/", "_")
         raw_base = TMP_DIR / f"{idx:02d}_{safe_id}_raw"
         fitted = TMP_DIR / f"{idx:02d}_{safe_id}_fitted.wav"
-        synthesize_segment(seg["text"], raw_base)
+        synthesize_segment(seg["text"], raw_base, rate=seg.get("voiceRate", EDGE_RATE))
         raw = existing_raw(raw_base)
         fit_to_duration(raw, fitted, target)
         fitted_paths.append(fitted)

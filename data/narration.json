@@ -8,7 +8,8 @@
       "end": 19,
       "chapter": "Opening",
       "headline": "A full-funnel AI growth engine for Movin",
-      "text": "Today, Movin is not just looking at marketing as campaigns. Movin is building an intelligent growth engine — one that understands how customers discover logistics providers, what they ask AI engines, which accounts are showing intent, which campaigns should be launched, and how shipment data itself can become a monetizable business asset. This is the end-to-end Movin Marketing Technology Operating System."
+      "text": "Today, Movin is building more than marketing campaigns. It is building an intelligent growth engine that understands how customers discover logistics providers, what they ask AI engines, which accounts show intent, which campaigns to launch, and how shipment data can become a monetizable business asset. This is the Movin Marketing Technology Operating System.",
+      "voiceRate": "-10%"
     },
     {
       "id": "aeo_geo",
@@ -16,7 +17,8 @@
       "end": 50,
       "chapter": "AEO + GEO Intelligence",
       "headline": "Move from search visibility to AI answer ownership",
-      "text": "We start with the Movin AI Command Center. Buyers are no longer discovering logistics partners only through Google search or sales outreach. They are asking AI engines: ChatGPT, Perplexity, Gemini, Copilot and Google AI Overviews. That is why Movin needs AEO — Answer Engine Optimization — and GEO — Generative Engine Optimization. The platform tracks whether Movin appears in AI-generated answers, whether Movin is cited, which pages are referenced, which prompts trigger visibility, and where competitors are being recommended instead."
+      "text": "We start with the Movin AI Command Center. Buyers are no longer discovering logistics partners only through Google search or sales outreach. They are asking AI engines: ChatGPT, Perplexity, Gemini, Copilot and Google AI Overviews. That is why Movin needs AEO — Answer Engine Optimization — and GEO — Generative Engine Optimization. The platform tracks whether Movin appears in AI answers, whether it is cited, which pages are referenced, which prompts create visibility, and where competitors are recommended instead.",
+      "voiceRate": "-10%"
     },
     {
       "id": "prompt_intelligence",
@@ -24,7 +26,8 @@
       "end": 81,
       "chapter": "Prompt + Intent Intelligence",
       "headline": "Turn customer questions into demand signals",
-      "text": "Next, the system moves from visibility to intent. The Prompt Intelligence view shows what customers are actually asking: best logistics partner for India to UAE, real-time freight tracking, last-mile SLA for enterprise, warehouse fulfilment comparison, cross-border e-commerce logistics, reverse logistics and freight pricing. These are not keywords. These are buying questions. The platform groups these prompts by customer intent, volume, quality of Movin’s response and next best action."
+      "text": "Next, the system moves from visibility to intent. The Prompt Intelligence view shows what customers are actually asking: best logistics partner for India to UAE, real-time freight tracking, last-mile SLA for enterprise, warehouse fulfilment, cross-border e-commerce logistics, reverse logistics and freight pricing. These are buying questions, not keywords. The platform groups them by intent, volume, response quality and next best action.",
+      "voiceRate": "-10%"
     },
     {
       "id": "opportunity_engine",
@@ -32,7 +35,8 @@
       "end": 108,
       "chapter": "Opportunity Engine",
       "headline": "Convert AI visibility gaps into execution priorities",
-      "text": "The Opportunity Engine converts intelligence into action. It rank-orders the highest-value plays by visibility gap, business impact, effort and priority. For Movin, this can mean shipment tracking prompts, India to UAE logistics comparisons, last-mile SLA queries, reverse logistics and pricing transparency. Marketing teams often know there is a visibility gap, but not what to do next. Here, the system turns that gap into a clear quarterly execution plan."
+      "text": "The Opportunity Engine converts intelligence into action. It rank-orders the highest-value plays by visibility gap, business impact, effort and priority. For Movin, this can mean shipment tracking prompts, India to UAE comparisons, last-mile SLA queries, reverse logistics and pricing transparency. Teams can see the gap, the opportunity and the next execution priority.",
+      "voiceRate": "-10%"
     },
     {
       "id": "lead_generation",
