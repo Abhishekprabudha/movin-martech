@@ -310,7 +310,15 @@ def make_preview_mp4():
     silent = GEN_DIR / "movin_martech_silent_stitch.mp4"
     final = ROOT / "movin_martech_weaved_preview.mp4"
     run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat), "-vf", "scale=1280:-2,fps=24,format=yuv420p", "-c:v", "libx264", "-preset", "medium", "-crf", "28", "-an", "-movflags", "+faststart", str(silent)])
-    run(["ffmpeg", "-y", "-i", str(silent), "-i", str(narration_mp3), "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", str(final)])
+    video_duration = ffprobe_duration(silent)
+    narration_duration = ffprobe_duration(narration_mp3)
+    delta = narration_duration - video_duration
+    filters = []
+    if delta > 0.05:
+        filters.append(f"tpad=stop_mode=clone:stop_duration={delta:.3f}")
+    filters.append(f"trim=duration={narration_duration:.3f}")
+    filters.append("setpts=PTS-STARTPTS")
+    run(["ffmpeg", "-y", "-i", str(silent), "-i", str(narration_mp3), "-filter:v", ",".join(filters), "-map", "0:v:0", "-map", "1:a:0", "-c:v", "libx264", "-preset", "medium", "-crf", "28", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(final)])
     print(f"Preview MP4 created: {final} | {size_mb(final):.1f} MB")
     return final
 

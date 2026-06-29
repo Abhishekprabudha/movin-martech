@@ -33,9 +33,18 @@ def run(cmd: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
+def ffprobe_duration(path: Path) -> float:
+    out = subprocess.check_output([
+        "ffprobe", "-v", "error", "-show_entries", "format=duration",
+        "-of", "default=noprint_wrappers=1:nokey=1", str(path)
+    ], text=True).strip()
+    return float(out)
+
+
 def ensure_ffmpeg() -> None:
-    if not shutil.which("ffmpeg"):
-        raise SystemExit("ffmpeg is required to build the final video.")
+    missing = [tool for tool in ("ffmpeg", "ffprobe") if not shutil.which(tool)]
+    if missing:
+        raise SystemExit(f"{', '.join(missing)} is required to build the final video.")
 
 
 def load_manifest() -> dict:
@@ -88,12 +97,26 @@ def stitch_video() -> None:
 def add_narration() -> None:
     if not NARRATION.exists():
         raise SystemExit("Narration MP3 missing. Run scripts/build_narration.py first.")
-    # If video is shorter than narration, freeze the last frame. If it is longer, shortest keeps the demo tight.
+
+    video_duration = ffprobe_duration(SILENT_STITCH)
+    narration_duration = ffprobe_duration(NARRATION)
+    delta = narration_duration - video_duration
+    filters = []
+    if delta > 0.05:
+        # The source clips can be shorter than the fixed five-minute narration.
+        # Clone the final frame instead of using -shortest so the muxed video
+        # remains alive until the narration reaches its exact endpoint.
+        filters.append(f"tpad=stop_mode=clone:stop_duration={delta:.3f}")
+    filters.append(f"trim=duration={narration_duration:.3f}")
+    filters.append("setpts=PTS-STARTPTS")
+
     run([
         "ffmpeg", "-y", "-i", str(SILENT_STITCH), "-i", str(NARRATION),
+        "-filter:v", ",".join(filters),
         "-map", "0:v:0", "-map", "1:a:0",
-        "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
-        "-shortest", "-movflags", "+faststart", str(FINAL)
+        "-c:v", "libx264", "-preset", "medium", "-crf", "28",
+        "-c:a", "aac", "-b:a", "160k",
+        "-movflags", "+faststart", str(FINAL)
     ])
 
 

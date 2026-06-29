@@ -67,9 +67,18 @@ function totalDuration() {
   return narration?.durationSeconds || (manifest?.clips || []).reduce((sum, clip) => sum + Number(clip.duration || 0), 0) || 300;
 }
 
+function clipEndTime(index = currentClipIndex) {
+  const start = clipOffsets[index] || 0;
+  return start + Number(manifest?.clips?.[index]?.duration || 0);
+}
+
 function globalTime() {
   if (useFinalVideo) return video.currentTime || 0;
-  return (clipOffsets[currentClipIndex] || 0) + (video.currentTime || 0);
+  const videoTime = (clipOffsets[currentClipIndex] || 0) + (video.currentTime || 0);
+  if (video.ended && !narrationAudio.paused) {
+    return Math.min(narrationAudio.currentTime || videoTime, clipEndTime());
+  }
+  return videoTime;
 }
 
 function renderTranscript() {
@@ -252,6 +261,10 @@ function wireMedia() {
     updateControlLabels();
   });
   video.addEventListener('ended', () => {
+    if (!useFinalVideo && (narrationAudio.currentTime || 0) < clipEndTime() - 0.25) {
+      updateControlLabels();
+      return;
+    }
     narrationAudio.pause();
     updateControlLabels();
   });
@@ -259,6 +272,12 @@ function wireMedia() {
   introAudio.addEventListener('pause', updateControlLabels);
   narrationAudio.addEventListener('play', updateControlLabels);
   narrationAudio.addEventListener('pause', updateControlLabels);
+  narrationAudio.addEventListener('timeupdate', () => {
+    if (!isIntroActive && !useFinalVideo && video.ended) {
+      if ((narrationAudio.currentTime || 0) >= clipEndTime() - 0.05) narrationAudio.pause();
+      updateUI();
+    }
+  });
 
   pauseBtn.addEventListener('click', () => {
     const audio = activeNarration();
